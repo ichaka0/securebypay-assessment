@@ -17,8 +17,18 @@ abstract final class AppConfig {
   /// the Render API in release builds (the Vercel deployment) and the local
   /// backend while developing.
   static String get apiBaseUrl {
-    if (_apiUrlOverride.isNotEmpty) return _apiUrlOverride;
+    final override = _apiUrlOverride.trim();
+    if (override.isNotEmpty) return normaliseApiUrl(override);
     return kReleaseMode ? productionApiUrl : localApiUrl;
+  }
+
+  /// Every backend route lives under the `/api` global prefix, so accept a
+  /// bare host (`https://host` or `https://host/`) and add it:
+  /// `https://host` -> `https://host/api`.
+  @visibleForTesting
+  static String normaliseApiUrl(String url) {
+    final trimmed = url.replaceAll(RegExp(r'/+$'), '');
+    return trimmed.endsWith('/api') ? trimmed : '$trimmed/api';
   }
 
   static const String appName = 'Myafrimall';
