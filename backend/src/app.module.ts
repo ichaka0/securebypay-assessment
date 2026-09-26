@@ -26,6 +26,9 @@ import { WalletModule } from './wallet/wallet.module';
         autoLoadEntities: true,
         // Apply pending migrations on boot so a fresh DB works out of the box.
         migrationsRun: true,
+        // Keep retrying while a serverless database (Neon) wakes up.
+        retryAttempts: 10,
+        retryDelay: 3000,
       }),
     }),
     // Global default: 100 requests / minute per IP. Auth routes are stricter.
