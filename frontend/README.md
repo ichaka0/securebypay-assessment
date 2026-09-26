@@ -5,12 +5,17 @@ Flutter Web client for the Sign up, Sign in and Dashboard screens.
 ## Run
 ```bash
 flutter pub get
-flutter run -d chrome --web-port 8080 \
-  --dart-define=API_BASE_URL=http://localhost:3000/api
+flutter run -d chrome --web-port 8080   # uses the local API on :3000
 ```
-`API_BASE_URL` defaults to `http://localhost:3000/api`.
+Which API the app calls (`lib/core/config/app_config.dart`):
 
-Release build: `flutter build web --release --dart-define=API_BASE_URL=https://<host>/api`
+| Build | API |
+|---|---|
+| `flutter run` (debug) | `http://localhost:3000/api` |
+| `flutter build web --release` (e.g. Vercel) | `https://securebypay-assessment-wf1p.onrender.com/api` |
+| Either, with `--dart-define=API_BASE_URL=…` | the given URL |
+
+Release build: `flutter build web --release` (targets the Render API).
 
 ## Architecture
 Feature-first layout with a thin data → application → presentation split:

@@ -9,12 +9,14 @@ fi
 
 export PATH="$PATH:$(pwd)/flutter/bin"
 
-# URL of the deployed NestJS API, including the /api prefix.
-# Set API_BASE_URL in the Vercel project's Environment Variables.
-if [ -z "$API_BASE_URL" ]; then
-  echo "Error: API_BASE_URL is not set (e.g. https://<your-api-host>/api)." >&2
-  exit 1
-fi
-
 flutter config --enable-web
-flutter build web --release --dart-define=API_BASE_URL="$API_BASE_URL"
+
+# Release builds call the Render API by default
+# (https://securebypay-assessment-wf1p.onrender.com/api, see
+# lib/core/config/app_config.dart). Set API_BASE_URL in the Vercel project's
+# Environment Variables only to point at a different backend.
+if [ -n "$API_BASE_URL" ]; then
+  flutter build web --release --dart-define=API_BASE_URL="$API_BASE_URL"
+else
+  flutter build web --release
+fi

@@ -1,12 +1,25 @@
-/// Compile-time configuration.
-///
-/// Override at build/run time, e.g.
-/// `flutter run -d chrome --dart-define=API_BASE_URL=https://api.example.com/api`.
+import 'package:flutter/foundation.dart';
+
+/// App-wide configuration.
 abstract final class AppConfig {
-  static const String apiBaseUrl = String.fromEnvironment(
-    'API_BASE_URL',
-    defaultValue: 'http://localhost:3000/api',
-  );
+  /// Deployed NestJS API on Render.
+  static const String productionApiUrl =
+      'https://securebypay-assessment-wf1p.onrender.com/api';
+
+  /// Local backend started with `npm run start:dev`.
+  static const String localApiUrl = 'http://localhost:3000/api';
+
+  /// Optional build-time override, e.g.
+  /// `flutter run -d chrome --dart-define=API_BASE_URL=https://staging.example.com/api`.
+  static const String _apiUrlOverride = String.fromEnvironment('API_BASE_URL');
+
+  /// Base URL for API calls: the `API_BASE_URL` override if given, otherwise
+  /// the Render API in release builds (the Vercel deployment) and the local
+  /// backend while developing.
+  static String get apiBaseUrl {
+    if (_apiUrlOverride.isNotEmpty) return _apiUrlOverride;
+    return kReleaseMode ? productionApiUrl : localApiUrl;
+  }
 
   static const String appName = 'Myafrimall';
 }

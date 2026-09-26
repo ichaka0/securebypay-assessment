@@ -1,5 +1,9 @@
 # Myafrimall — Technical Test
 
+**Live app:** https://securebypay-assessment-five.vercel.app ·
+**API:** https://securebypay-assessment-wf1p.onrender.com/api
+([Swagger docs](https://securebypay-assessment-wf1p.onrender.com/docs))
+
 A responsive Flutter Web app backed by a NestJS API and PostgreSQL. It implements the three
 screens from the Figma file (**Sign up**, **Sign in**, **Dashboard**). Registration, login and
 every interactive element on the dashboard work end to end.
@@ -35,8 +39,7 @@ Swagger UI: http://localhost:3000/docs
 ```bash
 cd frontend
 flutter pub get
-flutter run -d chrome --web-port 8080 \
-  --dart-define=API_BASE_URL=http://localhost:3000/api
+flutter run -d chrome --web-port 8080   # debug builds use http://localhost:3000/api
 ```
 
 Create an account on the Sign up screen. The new account comes with demo shipments, so the
