@@ -5,12 +5,12 @@ import { DataSource } from 'typeorm';
 
 @ApiTags('Health')
 @SkipThrottle()
-@Controller('health')
+@Controller()
 export class HealthController {
   constructor(private readonly dataSource: DataSource) {}
 
-  /** Liveness + database connectivity check. */
-  @Get()
+  
+  @Get('health')
   @ApiOkResponse({ schema: { example: { status: 'ok', database: 'up' } } })
   async check() {
     let database: 'up' | 'down' = 'up';
@@ -20,5 +20,12 @@ export class HealthController {
       database = 'down';
     }
     return { status: 'ok', database };
+  }
+
+  /** Liveness only; doesn't touch the database so Neon can scale to zero. */
+  @Get('ping')
+  @ApiOkResponse({ schema: { example: { status: 'ok' } } })
+  ping() {
+    return { status: 'ok' };
   }
 }

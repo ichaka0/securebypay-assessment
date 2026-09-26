@@ -24,7 +24,6 @@ import { WalletModule } from './wallet/wallet.module';
       useFactory: () => ({
         ...buildDataSourceOptions(),
         autoLoadEntities: true,
-        // Apply pending migrations on boot so a fresh DB works out of the box.
         migrationsRun: true,
         // Keep retrying while a serverless database (Neon) wakes up.
         retryAttempts: 10,
