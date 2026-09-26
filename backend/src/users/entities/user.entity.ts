@@ -11,7 +11,6 @@ export class User extends BaseEntity {
   @Column({ name: 'last_name', length: 100 })
   lastName: string;
 
-  /** Always stored lower-cased; uniqueness is case-insensitive in practice. */
   @Index({ unique: true })
   @Column({ length: 255 })
   email: string;
@@ -19,7 +18,6 @@ export class User extends BaseEntity {
   @Column({ name: 'phone_number', length: 20 })
   phoneNumber: string;
 
-  /** bcrypt hash; never selected unless explicitly requested. */
   @Column({ name: 'password_hash', select: false })
   passwordHash: string;
 

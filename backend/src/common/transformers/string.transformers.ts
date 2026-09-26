@@ -1,6 +1,5 @@
 import { TransformFnParams } from 'class-transformer';
 
-/** class-transformer helpers for normalising incoming string fields. */
 type Params = Omit<TransformFnParams, 'value'> & { value: unknown };
 
 export const trim = ({ value }: Params): unknown =>

@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from '../entities/user.entity';
 
-/** Public representation of a user (never includes credentials). */
 export class UserResponseDto {
   @ApiProperty() id: string;
   @ApiProperty() firstName: string;

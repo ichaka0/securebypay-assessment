@@ -1,7 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
-/** Protects routes with the `jwt` Passport strategy. */
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
   handleRequest<TUser>(err: unknown, user: TUser): TUser {

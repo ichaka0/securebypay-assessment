@@ -3,7 +3,7 @@ import { UsersService } from '../users/users.service';
 import { WalletResponseDto } from './dto/fund-wallet.dto';
 
 /**
- * Wallet operations. Funding is simulated (no payment gateway in scope);
+ * Wallet operations. Funding is simulated (no payment gateway);
  * the balance is credited directly.
  */
 @Injectable()

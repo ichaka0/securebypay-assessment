@@ -5,7 +5,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UsersService } from '../../users/users.service';
 import { AuthUser, JwtPayload } from '../interfaces/auth-user.interface';
 
-/** Validates `Authorization: Bearer <token>` and resolves the user. */
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(

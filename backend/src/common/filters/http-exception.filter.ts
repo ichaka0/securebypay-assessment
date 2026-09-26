@@ -8,23 +8,15 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
-/** Shape of every error response returned by the API. */
 export interface ErrorResponseBody {
   statusCode: number;
   error: string;
-  /** Human-readable summary suitable for showing in a toast/snackbar. */
   message: string;
-  /** Per-field validation messages, when the request body was invalid. */
   errors?: Record<string, string[]>;
   path: string;
   timestamp: string;
 }
 
-/**
- * Normalises all thrown errors into {@link ErrorResponseBody} so the client
- * has one predictable shape to parse. Unknown errors become 500s and are
- * logged without leaking internals to the caller.
- */
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
   private readonly logger = new Logger(AllExceptionsFilter.name);

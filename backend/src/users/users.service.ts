@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 
-/** Persistence operations for {@link User}. */
 @Injectable()
 export class UsersService {
   constructor(
@@ -20,7 +19,6 @@ export class UsersService {
     return user;
   }
 
-  /** Looks up a user by email and includes the password hash for login. */
   findByEmailWithPassword(email: string): Promise<User | null> {
     return this.users
       .createQueryBuilder('user')

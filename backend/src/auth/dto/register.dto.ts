@@ -17,7 +17,7 @@ import {
 /** Nigerian mobile number: optional +234/234/0 prefix, then 10 digits. */
 export const NIGERIAN_PHONE_REGEX = /^(?:\+?234|0)?[789][01]\d{8}$/;
 
-/** Password rule shared with the frontend: 8+ chars, a letter and a digit. */
+/** Password rule: 8+ chars, a letter and a digit. */
 export const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
 
 export class RegisterDto {

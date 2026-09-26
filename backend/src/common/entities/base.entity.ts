@@ -4,7 +4,6 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-/** Shared audit columns for every table. */
 export abstract class BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;

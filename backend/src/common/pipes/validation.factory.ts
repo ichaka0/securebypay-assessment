@@ -1,9 +1,6 @@
 import { BadRequestException, ValidationError } from '@nestjs/common';
 
-/**
- * Converts class-validator errors into `{ message, errors: { field: [...] } }`
- * so the frontend can show messages next to the matching input.
- */
+
 export const validationExceptionFactory = (
   validationErrors: ValidationError[],
 ): BadRequestException => {
