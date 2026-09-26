@@ -1,4 +1,4 @@
-# Myafrimall — MashonaDev Technical Test
+# Myafrimall — Technical Test
 
 A responsive Flutter Web app backed by a NestJS API and PostgreSQL. It implements the three
 screens from the Figma file (**Sign up**, **Sign in**, **Dashboard**). Registration, login and
@@ -69,16 +69,3 @@ Widget tests render every screen at 390, 768 and 1440px and fail on any layout o
 cd backend  && npm run lint && npm test && npm run test:e2e   # e2e needs the DB from .env
 cd frontend && flutter analyze && flutter test
 ```
-
-## Design notes and trade-offs
-- **Figma fidelity.** Colours, type scale and radii are centralised in
-  `frontend/lib/core/theme/`, so matching Figma exactly is a token change there. Bitmap
-  artwork (banner illustration, avatar) loads from `frontend/assets/images/`; each has a
-  code-drawn fallback until the Figma exports are added (see `frontend/README.md`).
-- **Dotted world map.** Generated from real geography with the `dotted-map` package and
-  shipped as ~4.7k points (30 KB JSON). A `CustomPainter` draws it in one call, which stays
-  sharp at any size and is much lighter than the ~1 MB SVG equivalent.
-- **Token storage.** The JWT sits in `localStorage` for simplicity. A production build would
-  use an httpOnly refresh-token cookie with a short-lived in-memory access token.
-- **Demo data.** Seeding shipments at sign-up keeps the review flow to a single step. In a
-  real product, shipments would come from a booking flow.
