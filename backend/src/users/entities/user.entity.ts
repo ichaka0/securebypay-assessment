@@ -31,6 +31,23 @@ export class User extends BaseEntity {
   })
   walletBalance: number;
 
+  @Column({
+    name: 'reset_token_hash',
+    type: 'varchar',
+    length: 64,
+    nullable: true,
+    select: false,
+  })
+  resetTokenHash: string | null = null;
+
+  @Column({
+    name: 'reset_token_expires_at',
+    type: 'timestamptz',
+    nullable: true,
+    select: false,
+  })
+  resetTokenExpiresAt: Date | null = null;
+
   @OneToMany(() => Shipment, (shipment) => shipment.user)
   shipments: Shipment[];
 }

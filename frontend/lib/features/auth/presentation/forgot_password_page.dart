@@ -13,20 +13,18 @@ import '../../../core/widgets/primary_button.dart';
 import '../application/auth_controller.dart';
 import 'widgets/auth_layout.dart';
 import 'widgets/inline_link_text.dart';
-import 'widgets/legal_notice.dart';
 
-/// "Sign in to your account" screen.
-class SignInPage extends ConsumerStatefulWidget {
-  const SignInPage({super.key});
+
+class ForgotPasswordPage extends ConsumerStatefulWidget {
+  const ForgotPasswordPage({super.key});
 
   @override
-  ConsumerState<SignInPage> createState() => _SignInPageState();
+  ConsumerState<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
 }
 
-class _SignInPageState extends ConsumerState<SignInPage> {
+class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
   final _formKey = GlobalKey<FormState>();
   final _email = TextEditingController();
-  final _password = TextEditingController();
 
   Map<String, String> _serverErrors = const {};
   bool _submitting = false;
@@ -34,7 +32,6 @@ class _SignInPageState extends ConsumerState<SignInPage> {
   @override
   void dispose() {
     _email.dispose();
-    _password.dispose();
     super.dispose();
   }
 
@@ -50,14 +47,23 @@ class _SignInPageState extends ConsumerState<SignInPage> {
 
     setState(() => _submitting = true);
     try {
-      final user = await ref
+      final reset = await ref
           .read(authControllerProvider.notifier)
-          .signIn(email: _email.text, password: _password.text);
+          .requestPasswordReset(_email.text);
       if (!mounted) return;
-      AppSnackbar.success(context, 'Welcome back, ${user.firstName}!');
+      AppSnackbar.success(
+        context,
+        'We\'ve verified your account. Choose a new password.',
+      );
+      context.go('${Routes.resetPassword}?token=${reset.token}');
     } on ApiException catch (e) {
       if (!mounted) return;
-      setState(() => _serverErrors = e.fieldErrors);
+      setState(() {
+        _serverErrors = {
+          ...e.fieldErrors,
+          if (e.statusCode == 404) 'email': e.message,
+        };
+      });
       _formKey.currentState?.validate();
       AppSnackbar.error(context, e.message);
     } finally {
@@ -79,17 +85,18 @@ class _SignInPageState extends ConsumerState<SignInPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Sign in to your account', style: AppTextStyles.heading),
+              Text('Forgot your password?', style: AppTextStyles.heading),
               const SizedBox(height: 12),
               InlineLinkText(
                 segments: [
                   const TextSegment(
-                    'Log in to Myafrimall to enjoy seamless shipping to over '
-                    '300 countries right from Nigeria. Don\'t have an account '
-                    'yet? ',
+                    'Enter the email linked to your account and we\'ll help you '
+                    'set a new password. Remembered it? ',
                   ),
-                  TextSegment('Sign Up',
-                      onTap: () => context.go(Routes.signUp)),
+                  TextSegment(
+                    'Back to login',
+                    onTap: () => context.go(Routes.signIn),
+                  ),
                 ],
               ),
               const SizedBox(height: 32),
@@ -101,35 +108,17 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                 serverError: _serverErrors['email'],
                 onChanged: (_) => _clearServerError('email'),
                 keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
+                textInputAction: TextInputAction.done,
                 autofillHints: const [AutofillHints.email],
-              ),
-              const SizedBox(height: 24),
-              PasswordField(
-                controller: _password,
-                validator: (v) => Validators.required(v, 'Password'),
-                serverError: _serverErrors['password'],
-                onChanged: (_) => _clearServerError('password'),
                 onSubmitted: (_) => _submit(),
-              ),
-              const SizedBox(height: 16),
-              InlineLinkText(
-                segments: [
-                  TextSegment(
-                    'Forgot Password?',
-                    onTap: () => context.go(Routes.forgotPassword),
-                  ),
-                ],
               ),
               const SizedBox(height: 32),
               PrimaryButton(
-                label: 'Login',
+                label: 'Continue',
                 loading: _submitting,
                 onPressed: _submit,
                 expand: context.isMobile,
               ),
-              const SizedBox(height: 24),
-              const LegalNotice(actionLabel: 'login'),
             ],
           ),
         ),

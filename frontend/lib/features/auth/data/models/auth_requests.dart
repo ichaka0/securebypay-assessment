@@ -23,7 +23,7 @@ class RegisterRequest {
       };
 }
 
-/// Body for `POST /auth/login`.
+
 class LoginRequest {
   const LoginRequest({required this.email, required this.password});
 
@@ -32,4 +32,35 @@ class LoginRequest {
 
   Map<String, dynamic> toJson() =>
       {'email': email.trim(), 'password': password};
+}
+
+class ForgotPasswordRequest {
+  const ForgotPasswordRequest({required this.email});
+
+  final String email;
+
+  Map<String, dynamic> toJson() => {'email': email.trim()};
+}
+
+class PasswordResetToken {
+  const PasswordResetToken({required this.token, required this.expiresInSeconds});
+
+  final String token;
+  final int expiresInSeconds;
+
+  factory PasswordResetToken.fromJson(Map<String, dynamic> json) =>
+      PasswordResetToken(
+        token: json['resetToken'] as String,
+        expiresInSeconds: (json['expiresInSeconds'] as num?)?.toInt() ?? 0,
+      );
+}
+
+
+class ResetPasswordRequest {
+  const ResetPasswordRequest({required this.token, required this.password});
+
+  final String token;
+  final String password;
+
+  Map<String, dynamic> toJson() => {'token': token, 'password': password};
 }

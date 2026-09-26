@@ -3,16 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/auth/application/auth_controller.dart';
+import '../../features/auth/presentation/forgot_password_page.dart';
+import '../../features/auth/presentation/reset_password_page.dart';
 import '../../features/auth/presentation/sign_in_page.dart';
 import '../../features/auth/presentation/sign_up_page.dart';
 import '../../features/dashboard/presentation/dashboard_page.dart';
 import '../theme/app_colors.dart';
 import 'routes.dart';
 
-/// App router with an auth guard:
-/// * while the saved session is being restored -> splash
-/// * signed out -> only sign-in / sign-up are reachable
-/// * signed in  -> auth pages redirect to the dashboard
+
 final routerProvider = Provider<GoRouter>((ref) {
   // Bridges Riverpod auth changes into GoRouter's refresh mechanism.
   final authChanges = ValueNotifier<AsyncValue<Object?>>(const AsyncLoading());
@@ -30,7 +29,13 @@ final routerProvider = Provider<GoRouter>((ref) {
     redirect: (context, state) {
       final auth = authChanges.value;
       final location = state.matchedLocation;
-      final onAuthPage = location == Routes.signIn || location == Routes.signUp;
+      const authPages = {
+        Routes.signIn,
+        Routes.signUp,
+        Routes.forgotPassword,
+        Routes.resetPassword,
+      };
+      final onAuthPage = authPages.contains(location);
 
       if (auth.isLoading && !auth.hasValue) {
         return location == Routes.splash ? null : Routes.splash;
@@ -54,6 +59,22 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: Routes.signUp,
         pageBuilder: (_, state) =>
             NoTransitionPage(key: state.pageKey, child: const SignUpPage()),
+      ),
+      GoRoute(
+        path: Routes.forgotPassword,
+        pageBuilder: (_, state) => NoTransitionPage(
+          key: state.pageKey,
+          child: const ForgotPasswordPage(),
+        ),
+      ),
+      GoRoute(
+        path: Routes.resetPassword,
+        pageBuilder: (_, state) => NoTransitionPage(
+          key: state.pageKey,
+          child: ResetPasswordPage(
+            token: state.uri.queryParameters['token'] ?? '',
+          ),
+        ),
       ),
       GoRoute(
         path: Routes.dashboard,

@@ -22,6 +22,16 @@ class AuthRepository {
 
   Future<User> currentUser() async => User.fromJson(await _api.get('/auth/me'));
 
+  Future<PasswordResetToken> requestPasswordReset(
+    ForgotPasswordRequest request,
+  ) async =>
+      PasswordResetToken.fromJson(
+        await _api.post('/auth/forgot-password', body: request.toJson()),
+      );
+
+  Future<void> resetPassword(ResetPasswordRequest request) =>
+      _api.post('/auth/reset-password', body: request.toJson());
+
   Future<void> logout() => _tokens.clear();
 
   Future<User> _authenticate(String path, Map<String, dynamic> body) async {

@@ -6,11 +6,7 @@ import '../data/auth_repository.dart';
 import '../data/models/auth_requests.dart';
 import '../data/models/user.dart';
 
-/// Session state: `AsyncData(null)` = signed out, `AsyncData(user)` = signed in,
-/// `AsyncLoading` = restoring a saved session on start-up.
-///
-/// [signIn]/[signUp] throw [ApiException] on failure so forms can show field
-/// errors; the session state is left unchanged in that case.
+
 class AuthController extends AsyncNotifier<User?> {
   AuthRepository get _repo => ref.read(authRepositoryProvider);
 
@@ -43,12 +39,23 @@ class AuthController extends AsyncNotifier<User?> {
     return user;
   }
 
+  Future<PasswordResetToken> requestPasswordReset(String email) =>
+      _repo.requestPasswordReset(ForgotPasswordRequest(email: email));
+
+  Future<void> resetPassword({
+    required String token,
+    required String password,
+  }) =>
+      _repo.resetPassword(
+        ResetPasswordRequest(token: token, password: password),
+      );
+
   Future<void> signOut() async {
     await _repo.logout();
     state = const AsyncData(null);
   }
 
-  /// Re-fetches the profile (e.g. after the wallet balance changed).
+
   Future<void> refreshUser() async {
     try {
       state = AsyncData(await _repo.currentUser());

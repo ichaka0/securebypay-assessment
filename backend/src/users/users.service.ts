@@ -19,6 +19,10 @@ export class UsersService {
     return user;
   }
 
+  findByEmail(email: string): Promise<User | null> {
+    return this.users.findOne({ where: { email: email.toLowerCase() } });
+  }
+
   findByEmailWithPassword(email: string): Promise<User | null> {
     return this.users
       .createQueryBuilder('user')
@@ -27,8 +31,38 @@ export class UsersService {
       .getOne();
   }
 
+  findByResetTokenHash(hash: string): Promise<User | null> {
+    return this.users
+      .createQueryBuilder('user')
+      .addSelect('user.resetTokenExpiresAt')
+      .where('user.resetTokenHash = :hash', { hash })
+      .getOne();
+  }
+
   async emailExists(email: string): Promise<boolean> {
     return this.users.exists({ where: { email: email.toLowerCase() } });
+  }
+
+  async setResetToken(
+    userId: string,
+    hash: string,
+    expiresAt: Date,
+  ): Promise<void> {
+    await this.users.update(userId, {
+      resetTokenHash: hash,
+      resetTokenExpiresAt: expiresAt,
+    });
+  }
+
+  async completePasswordReset(
+    userId: string,
+    passwordHash: string,
+  ): Promise<void> {
+    await this.users.update(userId, {
+      passwordHash,
+      resetTokenHash: null,
+      resetTokenExpiresAt: null,
+    });
   }
 
   create(data: Partial<User>, manager?: EntityManager): Promise<User> {
